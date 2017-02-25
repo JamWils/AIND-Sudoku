@@ -40,10 +40,15 @@ def naked_twins(values):
     # Find all instances of naked twins
     display(values)
     twins = find_twins(values)
-    pp(twins)
-
-
     # Eliminate the naked twins as possibilities for their peers
+    for twin in twins:
+        value = values[twin]
+        values_to_remove = {ord(x): None for x in value}
+        for peer in peers[twin]:
+            peer_value = values[peer]
+            if (len(peer_value) > 1) and (peer_value != value):
+                assign_value(values, peer, peer_value.translate(values_to_remove))
+
     return values
 
 def find_twins(values):
@@ -52,19 +57,31 @@ def find_twins(values):
             values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
         Returns:
-            a list of naked twins n the form of a tuple. The tuples zero element is value and the first element is an array of the box and its peers.
+            a dictionary with key as the box of a twin, and the value is an array of its peers that are twins.
         """
-    potential_naked_twins = [box for box in values.keys() if len(values[box]) == 2]
-    confirmed_twins = []
-    for box in potential_naked_twins:
+    potential_twins = [box for box in values.keys() if len(values[box]) == 2]
+    confirmed_twins = [{}, {}, {}]
+    for box in potential_twins:
         digit = values[box]
-        confirmed_twins.append((digit, [box]))
-        for peer in peers[box]:
-            if digit == values[peer]:
-                confirmed_twins[-1][1].append(peer)
 
-    return [twins for twins in confirmed_twins if len(twins[1]) > 1]
+        for index, set_of_units in enumerate(units[box]):
+            for peer in set_of_units:
+                if digit == values[peer] and box != peer:
+                    if box not in confirmed_twins[index]:
+                        confirmed_twins[index][box] = [peer]
+                    else:
+                        confirmed_twins[index][box].append(peer)
 
+
+    # return {k: v for k, v in confirmed_twins.items() if len(v) > 0}
+    pp(confirmed_twins)
+
+    return confirmed_twins
+
+
+
+def find_per_unit(values, potential_twins):
+    pass
 
 def grid_values(grid):
     """
