@@ -41,14 +41,18 @@ def naked_twins(values):
     display(values)
     twins = find_twins(values)
     # Eliminate the naked twins as possibilities for their peers
-    for twin in twins:
-        value = values[twin]
-        values_to_remove = {ord(x): None for x in value}
-        for peer in peers[twin]:
-            peer_value = values[peer]
-            if (len(peer_value) > 1) and (peer_value != value):
-                assign_value(values, peer, peer_value.translate(values_to_remove))
+    for index, set_of_twins in enumerate(twins):
+        for twin in set_of_twins:
+            value = values[twin]
+            values_to_remove = {ord(x): None for x in value}
 
+            for peer in units[twin][index]:
+                peer_value = values[peer]
+                if (len(peer_value) > 1) and (peer_value != value):
+                    assign_value(values, peer, peer_value.translate(values_to_remove))
+
+
+    display(values)
     return values
 
 def find_twins(values):
@@ -57,7 +61,7 @@ def find_twins(values):
             values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
         Returns:
-            a dictionary with key as the box of a twin, and the value is an array of its peers that are twins.
+            an array which holds three dictionary. The first element contains naked_twins for rows, element two is the columns, and three is the square units.
         """
     potential_twins = [box for box in values.keys() if len(values[box]) == 2]
     confirmed_twins = [{}, {}, {}]
@@ -72,16 +76,7 @@ def find_twins(values):
                     else:
                         confirmed_twins[index][box].append(peer)
 
-
-    # return {k: v for k, v in confirmed_twins.items() if len(v) > 0}
-    pp(confirmed_twins)
-
     return confirmed_twins
-
-
-
-def find_per_unit(values, potential_twins):
-    pass
 
 def grid_values(grid):
     """
