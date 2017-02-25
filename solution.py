@@ -39,29 +39,24 @@ def naked_twins(values):
 
     # Find all instances of naked twins
     display(values)
-    potential_naked_twins = [box for box in values.keys() if len(values[box]) == 2]
-
-    twins = find_twins(potential_naked_twins, values)
+    twins = find_twins(values)
     pp(twins)
-    return values
+
 
     # Eliminate the naked twins as possibilities for their peers
-    if len(potential_naked_twins) > 0:
-        return values
-    else:
-        return values
+    return values
 
-def find_twins(potential_twins, values):
+def find_twins(values):
     """Finds the naked twins from a list of possible twins.
         Args:
-            potential_twins: a list of boxes where twins might be possible
             values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
         Returns:
             a list of naked twins n the form of a tuple. The tuples zero element is value and the first element is an array of the box and its peers.
         """
+    potential_naked_twins = [box for box in values.keys() if len(values[box]) == 2]
     confirmed_twins = []
-    for box in potential_twins:
+    for box in potential_naked_twins:
         digit = values[box]
         confirmed_twins.append((digit, [box]))
         for peer in peers[box]:
