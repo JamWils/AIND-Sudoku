@@ -1,4 +1,5 @@
 import pygame
+from pprint import pprint as pp
 
 assignments = []
 
@@ -37,8 +38,37 @@ def naked_twins(values):
     """
 
     # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
+    display(values)
+    potential_naked_twins = [box for box in values.keys() if len(values[box]) == 2]
 
+    twins = find_twins(potential_naked_twins, values)
+    pp(twins)
+    return values
+
+    # Eliminate the naked twins as possibilities for their peers
+    if len(potential_naked_twins) > 0:
+        return values
+    else:
+        return values
+
+def find_twins(potential_twins, values):
+    """Finds the naked twins from a list of possible twins.
+        Args:
+            potential_twins: a list of boxes where twins might be possible
+            values(dict): a dictionary of the form {'box_name': '123456789', ...}
+
+        Returns:
+            a list of naked twins n the form of a tuple. The tuples zero element is value and the first element is an array of the box and its peers.
+        """
+    confirmed_twins = []
+    for box in potential_twins:
+        digit = values[box]
+        confirmed_twins.append((digit, [box]))
+        for peer in peers[box]:
+            if digit == values[peer]:
+                confirmed_twins[-1][1].append(peer)
+
+    return [twins for twins in confirmed_twins if len(twins[1]) > 1]
 
 
 def grid_values(grid):
@@ -142,7 +172,6 @@ if __name__ == '__main__':
     try:
         from visualize import visualize_assignments
         visualize_assignments(assignments)
-        assign_value(values, position, values[position])
     except SystemExit:
         pass
     except:
