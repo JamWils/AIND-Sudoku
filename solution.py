@@ -16,6 +16,15 @@ column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC', 'DEF', 'GHI') for cs in ('123', '456', '789')]
 unitlist = row_units + column_units + square_units
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
+
+
+double_rows = rows + rows
+double_cols = cols + cols[::-1]
+
+diagonal_forward = [s+t for s, t in zip(rows, cols)]
+diagonal_reverse = [s+t for s, t in zip(rows, cols[::-1])]
+diagonal_units = set(diagonal_forward).union(diagonal_reverse)
+
 peers = dict((s, set(sum(units[s], [])) - set([s])) for s in boxes)
 
 def assign_value(values, box, value):
@@ -38,7 +47,6 @@ def naked_twins(values):
     """
 
     # Find all instances of naked twins
-    display(values)
     twins = find_twins(values)
     # Eliminate the naked twins as possibilities for their peers
     for index, set_of_twins in enumerate(twins):
@@ -52,7 +60,6 @@ def naked_twins(values):
                     assign_value(values, peer, peer_value.translate(values_to_remove))
 
 
-    display(values)
     return values
 
 def find_twins(values):
