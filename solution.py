@@ -15,20 +15,14 @@ row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC', 'DEF', 'GHI') for cs in ('123', '456', '789')]
 
-
-
-double_rows = rows + rows
-double_cols = cols + cols[::-1]
-
 diagonal_forward = [s+t for s, t in zip(rows, cols)]
 diagonal_reverse = [s+t for s, t in zip(rows, cols[::-1])]
-diagonal_units = list(set(diagonal_forward).union(diagonal_reverse))
 diagonals = [diagonal_forward, diagonal_reverse]
 
 unitlist = row_units + column_units + square_units + diagonals
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s], [])) - set([s])) for s in boxes)
-pp(units)
+pp(unitlist)
 
 def assign_value(values, box, value):
     """
@@ -71,14 +65,16 @@ def find_twins(values):
             values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
         Returns:
-            an array which holds four dictionaries. The first element contains naked_twins for rows, element two is the columns, three is the square units, and four is for diagonals.
+            an array which holds dictionaries. Each elementin the array is a dictionary which contains naked_twins for a specific unit, i.e. row, column, square, diagonal, etc.
         """
     potential_twins = [box for box in values.keys() if len(values[box]) == 2]
-    confirmed_twins = [{}, {}, {}, {}, {}]
+    confirmed_twins = []
     for box in potential_twins:
         digit = values[box]
 
         for index, set_of_units in enumerate(units[box]):
+            if len(confirmed_twins) <= index:
+                confirmed_twins.append({})
             for peer in set_of_units:
                 if digit == values[peer] and box != peer:
                     if box not in confirmed_twins[index]:
