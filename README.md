@@ -3,11 +3,11 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: We've established that each element in a row, column, or square cannot be the same.  With those constraints in mind we can than infer that if there are a pair of twins in a row such as the number 23, then we know that all other elements in that row cannot be 2 or 3.  By eliminating 2 and 3 from the other 7 boxes in that row we are reducing the scope of our search afterwards.  This same theory can then be applied to all columns, square and diagonals that have a pair.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: This constraint was placed at a higher-level than elimination, only choice, and naked twins.  Basically, we can treat the diagonals as another set of units.  By doing this the diagonals are also added to the peers list as well.  This allows us to apply this constraint to all of our different strategies.  For example, when elimination is run we can also eliminate numbers in those diagonal spaces or in the case of 'E5' it will look at both diagonals.  This is because those locations were added to the peers list.  Ultimately, this will help us eliminate more possibilities before the first search is conducted.
 
 ### Install
 
